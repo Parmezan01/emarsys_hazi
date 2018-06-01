@@ -77,67 +77,82 @@ public class DueDateTest {
     }
 
     @Test
-    public void checkDateAdjustmentForSaturdayAndSunday() {
+    public void checkDateAdjustmentForSaturday() {
         dueDate.setSubmissionTime(new DateAndTime(2018, 6, 1, 15, 22));
         time = LocalDateTime.of(2018, 6, 2, 15, 22);
         long timeEpoch = dueDate.getEpochTime(time);
-        assertEquals((timeEpoch +172800), dueDate.adjustForWeekend(timeEpoch));
+        assertEquals((timeEpoch + 172800), dueDate.adjustForWeekend(timeEpoch));
     }
 
     @Test
-    public void checDateAdjustmentForPassingWeekend() {
+    public void checkDateAdjustmentForSunday() {
+        dueDate.setSubmissionTime(new DateAndTime(2018, 6, 1, 15, 22));
+        time = LocalDateTime.of(2018, 6, 3, 15, 22);
+        long timeEpoch = dueDate.getEpochTime(time);
+        assertEquals((timeEpoch + 172800), dueDate.adjustForWeekend(timeEpoch));
+    }
+
+    @Test
+    public void checkDateAdjustmentForOutOfWorkingHours() {
+        time = LocalDateTime.of(2018, 6, 4, 17, 22);
+        long timeEpoch = dueDate.getEpochTime(time);
+        assertEquals((timeEpoch + 57600), dueDate.adjustForOutOfWorkTime(timeEpoch));
+    }
+
+    @Test
+    public void checkDateAdjustmentForPassingWeekend() {
         dueDate.setSubmissionTime(new DateAndTime(2018, 6, 1, 15, 22));
         time = LocalDateTime.of(2018, 6, 4, 15, 22);
         long timeEpoch = dueDate.getEpochTime(time);
-        assertEquals((timeEpoch +172800), dueDate.adjustForWeekend(timeEpoch));
+        assertEquals((timeEpoch + 172800), dueDate.adjustForWeekend(timeEpoch));
     }
 
     @Test
     public void testDueDateForSameDay() {
         time = LocalDateTime.of(2018, 6, 1, 12, 0);
-        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10,0),2);
+        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10, 0), 2);
         assertEquals(time, finalDate);
     }
 
     @Test
     public void testDueDateForNextDayWithoutPassingWeekends() {
         time = LocalDateTime.of(2018, 6, 1, 12, 0);
-        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 5, 31, 10,0),10);
+        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 5, 31, 10, 0), 10);
         assertEquals(time, finalDate);
     }
 
     @Test
     public void testDueDateForAnotherDayPassingOneWeekend() {
         time = LocalDateTime.of(2018, 6, 6, 12, 0);
-        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10,0),26);
+        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10, 0), 26);
         assertEquals(time, finalDate);
     }
 
     @Test
     public void testDueDateForLandingOnWeekend() {
         time = LocalDateTime.of(2018, 6, 4, 12, 0);
-        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10,0),10);
+        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10, 0), 10);
         assertEquals(time, finalDate);
     }
 
     @Test
     public void testDueDateForExactlyFortyHours() {
         time = LocalDateTime.of(2018, 6, 8, 10, 0);
-        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10,0),40);
+        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10, 0), 40);
         assertEquals(time, finalDate);
     }
 
     @Test
     public void testDueDateTimeWhenCrossingMultipleWeekends() {
         time = LocalDateTime.of(2018, 6, 22, 12, 0);
-        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10,0),122);
+        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10, 0), 122);
         assertEquals(time, finalDate);
     }
 
     @Test
     public void testDueDateTimeWhenCrossingToNextMonth() {
         time = LocalDateTime.of(2018, 7, 2, 12, 0);
-        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10,0),170);
+        finalDate = dueDate.calculateDueDate(new DateAndTime(2018, 6, 1, 10, 0), 170);
         assertEquals(time, finalDate);
     }
 

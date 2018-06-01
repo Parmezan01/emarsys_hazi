@@ -13,7 +13,7 @@ public class DueDate {
     private final int SECONDS_PER_WEEKEND = 172800;
     private final int SECONDS_TO_BE_WORKING_HOUR = 57600;
 
-    public DueDate () {
+    public DueDate() {
     }
 
     public LocalDateTime calculateDueDate(DateAndTime dateAndTime, int turnaround) {
@@ -63,7 +63,7 @@ public class DueDate {
         LocalDateTime time = getDateTimeFromEpoch(epoch);
         long adjustment = 0;
         long toReturn = epoch;
-        if (time.getHour() > 17) {
+        if (time.getHour() >= 17) {
             adjustment = SECONDS_TO_BE_WORKING_HOUR;
         }
         toReturn += adjustment;
